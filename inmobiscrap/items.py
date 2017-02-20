@@ -8,7 +8,7 @@
 import scrapy
 
 
-class Departamento(scrapy.Item):
+class Apartment(scrapy.Item):
     price = scrapy.Field()
     rooms = scrapy.Field()
     address = scrapy.Field()
@@ -16,6 +16,7 @@ class Departamento(scrapy.Item):
     location = scrapy.Field()
     covered_area = scrapy.Field()
     total_area = scrapy.Field()
+    requires_guarranty = scrapy.Field()
     url = scrapy.Field()
     phone = scrapy.Field()
     email = scrapy.Field()

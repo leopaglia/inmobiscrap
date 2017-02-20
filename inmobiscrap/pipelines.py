@@ -33,5 +33,7 @@ class MongoPipeline(object):
         self.client.close()
 
     def process_item(self, item, spider):
-        self.client[self.db][self.col].insert(dict(item))
+        # insert if not found by address, else update
+        query = {'address': dict(item).get('address')}
+        self.client[self.db][self.col].update(query, dict(item), upsert=True)
         return item

@@ -1,5 +1,10 @@
 import scrapy
-from inmobiscrap.items import Departamento
+import re
+from inmobiscrap.items import Apartment
+
+
+def sanitize_price(price):
+    return float(re.sub(r'[^0-9.]', '', price))
 
 
 class LeporeSpider(scrapy.Spider):
@@ -27,15 +32,15 @@ class LeporeSpider(scrapy.Spider):
         dt_list = property_list_selector[0].css('dt::text').extract()  # headers
         dd_list = property_list_selector[0].css('dd::text').extract()  # values
 
-        # [printstuff, tel:xxxxxxx, mailto:xxxxxxxxx]
+        # [print stuff, tel:xxxxxxx, mailto:xxxxxxxxx]
         href_list = property_list_selector[0].css('dd a::attr(href)').extract()
 
         properties_dict = dict(zip(dt_list, dd_list))
 
-        yield Departamento(
+        yield Apartment(
             address=properties_dict.get('Dirección'),
             rooms=properties_dict.get('Ambientes'),
-            price=properties_dict.get('Valor'),
+            price=sanitize_price(properties_dict.get('Valor')),
             status=properties_dict.get('Estado'),
             location=properties_dict.get('Ubicación'),
             covered_area=properties_dict.get('Superficie Cubierta'),
